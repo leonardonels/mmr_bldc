@@ -16,22 +16,20 @@ suppressions=("--suppress=missingIncludeSystem"
               "--suppress=constParameterCallback"
               "--suppress=constVariablePointer")
 
-NUM_JOBS=$(nproc 2>/dev/null || echo 4)
-
 # 32bit run 
 make clean
 bear -- make
 
 cppcheck --version &> $logfile32
-cppcheck -j$NUM_JOBS --inline-suppr --project=compile_commands.json --enable=all --check-level=exhaustive ${suppressions[@]} 2>> $logfile32
+cppcheck --project=compile_commands.json --enable=all --check-level=exhaustive ${suppressions[@]} 2>> $logfile32
 
 
 #64bit run
 make clean
-bear -- make FEATURES="64"
+bear -- make all64
 
 cppcheck --version &> $logfile64
-cppcheck -j$NUM_JOBS --inline-suppr --project=compile_commands.json --enable=all  --check-level=exhaustive ${suppressions[@]} 2>> $logfile64
+cppcheck --project=compile_commands.json --enable=all  --check-level=exhaustive ${suppressions[@]} 2>> $logfile64
 
 
 

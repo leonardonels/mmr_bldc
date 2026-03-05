@@ -40,14 +40,13 @@ void timer_init(void) {
 	TIM_Cmd(TIM5, ENABLE);
 }
 
-float timer_seconds_elapsed_since(uint32_t time) {
-	uint32_t diff = TIM5->CNT - time;
-	return (float)diff * (1.0 / (float)TIMER_HZ);
+uint32_t timer_time_now(void) {
+	return TIM5->CNT;
 }
 
-float timer_calc_diff(uint32_t start, uint32_t time) {
-	uint32_t diff = time - start;
-	return (float)diff * (1.0 / (float)TIMER_HZ);
+float timer_seconds_elapsed_since(uint32_t time) {
+	uint32_t diff = TIM5->CNT - time;
+	return (float)diff / (float)TIMER_HZ;
 }
 
 /**

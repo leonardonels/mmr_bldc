@@ -18,16 +18,11 @@
 #ifndef PLATFORM_TIMESTAMP_H_
 #define PLATFORM_TIMESTAMP_H_
 
-#if defined(ESP_PLATFORM)
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
-#else
-#include <FreeRTOS.h>
-#include <task.h>
-#endif
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #include <stdint.h>
 
 // timestamp interface
-extern uint32_t lbm_timestamp(void);
+extern uint32_t timestamp(void);
 
 #endif

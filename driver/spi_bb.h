@@ -35,7 +35,6 @@ typedef struct {
 	stm32_gpio_t *miso_gpio;
 	int miso_pin;
 	mutex_t mutex;
-	bool mutex_init_done;
 } spi_bb_state;
 
 void spi_bb_init(spi_bb_state *s);

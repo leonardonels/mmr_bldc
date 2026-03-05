@@ -24,11 +24,9 @@ static void write_string_to_channel(lbm_char_channel_t *chan, const char *str) {
 }
 
 // Helper function to setup channel with data
-static void setup_channel_with_data(lbm_buffered_channel_state_t *bs,
-                                   lbm_char_channel_t *chan,
+static void setup_channel_with_data(lbm_buffered_channel_state_t *bs, 
+                                   lbm_char_channel_t *chan, 
                                    const char *data) {
-  // Zero-initialize the buffered channel state to ensure mutex_initialized is false
-  memset(bs, 0, sizeof(lbm_buffered_channel_state_t));
   lbm_create_buffered_char_channel(bs, chan);
   // Clear tokpar symbol string buffer
   memset(tokpar_sym_str, 0, TOKENIZER_MAX_SYMBOL_AND_STRING_LENGTH + 1);
@@ -40,10 +38,8 @@ static void setup_channel_with_data(lbm_buffered_channel_state_t *bs,
 }
 
 // Helper function to setup empty closed channel
-static void setup_empty_closed_channel(lbm_buffered_channel_state_t *bs,
+static void setup_empty_closed_channel(lbm_buffered_channel_state_t *bs, 
                                       lbm_char_channel_t *chan) {
-  // Zero-initialize the buffered channel state to ensure mutex_initialized is false
-  memset(bs, 0, sizeof(lbm_buffered_channel_state_t));
   lbm_create_buffered_char_channel(bs, chan);
   // Clear tokpar symbol string buffer
   memset(tokpar_sym_str, 0, TOKENIZER_MAX_SYMBOL_AND_STRING_LENGTH + 1);
@@ -55,7 +51,7 @@ static void setup_empty_closed_channel(lbm_buffered_channel_state_t *bs,
 // tok_syntax tests
 
 int test_tok_syntax_no_data(void) {
-  // LispBM already initialized in main()
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -70,10 +66,12 @@ int test_tok_syntax_no_data(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_syntax_open_paren(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -87,10 +85,12 @@ int test_tok_syntax_open_paren(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_syntax_close_paren(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -104,10 +104,12 @@ int test_tok_syntax_close_paren(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_syntax_array_open(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -121,10 +123,12 @@ int test_tok_syntax_array_open(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_syntax_invalid_data(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -139,6 +143,7 @@ int test_tok_syntax_invalid_data(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
@@ -146,6 +151,7 @@ int test_tok_syntax_invalid_data(void) {
 // tok_symbol tests
 
 int test_tok_symbol_no_data(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -158,15 +164,15 @@ int test_tok_symbol_no_data(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_symbol_valid_simple_delimiter(void) {
-
+  if (!start_lispbm_for_tests()) return 0;
+  
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
-  // Zero-initialize the buffered channel state to ensure mutex_initialized is false
-  memset(&bs, 0, sizeof(lbm_buffered_channel_state_t));
   lbm_create_buffered_char_channel(&bs, &chan);
   memset(tokpar_sym_str, 0, TOKENIZER_MAX_SYMBOL_AND_STRING_LENGTH + 1);
   write_string_to_channel(&chan, "hello ");  // Space delimiter, don't close channel
@@ -182,10 +188,12 @@ int test_tok_symbol_valid_simple_delimiter(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_symbol_valid_simple_closed(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -202,10 +210,12 @@ int test_tok_symbol_valid_simple_closed(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_symbol_invalid_start_number(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -219,6 +229,7 @@ int test_tok_symbol_invalid_start_number(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
@@ -226,6 +237,7 @@ int test_tok_symbol_invalid_start_number(void) {
 // tok_string tests
 
 int test_tok_string_no_data(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -239,15 +251,15 @@ int test_tok_string_no_data(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_string_valid_simple_delimiter(void) {
-
+  if (!start_lispbm_for_tests()) return 0;
+  
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
-  // Zero-initialize the buffered channel state to ensure mutex_initialized is false
-  memset(&bs, 0, sizeof(lbm_buffered_channel_state_t));
   lbm_create_buffered_char_channel(&bs, &chan);
   memset(tokpar_sym_str, 0, TOKENIZER_MAX_SYMBOL_AND_STRING_LENGTH + 1);
   write_string_to_channel(&chan, "\"hello\" ");  // Space delimiter after string
@@ -268,10 +280,12 @@ int test_tok_string_valid_simple_delimiter(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_string_valid_simple_closed(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -293,10 +307,12 @@ int test_tok_string_valid_simple_closed(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_string_invalid_start(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -311,6 +327,7 @@ int test_tok_string_invalid_start(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
@@ -318,6 +335,7 @@ int test_tok_string_invalid_start(void) {
 // tok_char tests
 
 int test_tok_char_no_data(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -331,15 +349,15 @@ int test_tok_char_no_data(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_char_valid_simple_delimiter(void) {
-
+  if (!start_lispbm_for_tests()) return 0;
+  
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
-  // Zero-initialize the buffered channel state to ensure mutex_initialized is false
-  memset(&bs, 0, sizeof(lbm_buffered_channel_state_t));
   lbm_create_buffered_char_channel(&bs, &chan);
   memset(tokpar_sym_str, 0, TOKENIZER_MAX_SYMBOL_AND_STRING_LENGTH + 1);
   write_string_to_channel(&chan, "\\#a ");  // Space delimiter
@@ -356,10 +374,12 @@ int test_tok_char_valid_simple_delimiter(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_char_valid_simple_closed(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -377,10 +397,12 @@ int test_tok_char_valid_simple_closed(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_char_escape_null(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -398,10 +420,12 @@ int test_tok_char_escape_null(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_char_escape_bell(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -419,10 +443,12 @@ int test_tok_char_escape_bell(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_char_escape_backspace(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -440,10 +466,12 @@ int test_tok_char_escape_backspace(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_char_escape_tab(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -461,10 +489,12 @@ int test_tok_char_escape_tab(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_char_escape_newline(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -482,10 +512,12 @@ int test_tok_char_escape_newline(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_char_escape_vtab(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -503,10 +535,12 @@ int test_tok_char_escape_vtab(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_char_escape_formfeed(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -524,10 +558,12 @@ int test_tok_char_escape_formfeed(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_char_escape_carriage_return(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -545,10 +581,12 @@ int test_tok_char_escape_carriage_return(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_char_escape_escape(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -566,10 +604,12 @@ int test_tok_char_escape_escape(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_char_escape_space(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -587,10 +627,12 @@ int test_tok_char_escape_space(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_char_escape_quote(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -608,10 +650,12 @@ int test_tok_char_escape_quote(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_char_escape_backslash(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -629,10 +673,12 @@ int test_tok_char_escape_backslash(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_char_escape_delete(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -650,10 +696,12 @@ int test_tok_char_escape_delete(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_char_escape_invalid(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -668,10 +716,12 @@ int test_tok_char_escape_invalid(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_char_invalid_start(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -686,6 +736,7 @@ int test_tok_char_invalid_start(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
@@ -693,6 +744,7 @@ int test_tok_char_invalid_start(void) {
 // tok_integer tests
 
 int test_tok_integer_no_data(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -706,10 +758,12 @@ int test_tok_integer_no_data(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_integer_positive(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -727,10 +781,12 @@ int test_tok_integer_positive(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_integer_invalid_start(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -744,6 +800,7 @@ int test_tok_integer_invalid_start(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
@@ -751,6 +808,7 @@ int test_tok_integer_invalid_start(void) {
 // tok_double tests
 
 int test_tok_double_no_data(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -764,10 +822,12 @@ int test_tok_double_no_data(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_double_simple(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -789,10 +849,12 @@ int test_tok_double_simple(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_double_invalid_start(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -806,6 +868,7 @@ int test_tok_double_invalid_start(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
@@ -813,6 +876,7 @@ int test_tok_double_invalid_start(void) {
 // tok_clean_whitespace tests
 
 int test_tok_clean_whitespace_no_data(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -826,10 +890,12 @@ int test_tok_clean_whitespace_no_data(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_clean_whitespace_spaces(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -853,6 +919,7 @@ int test_tok_clean_whitespace_spaces(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
@@ -860,6 +927,7 @@ int test_tok_clean_whitespace_spaces(void) {
 // Empty closed channel tests
 
 int test_tok_syntax_empty_closed(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -874,10 +942,12 @@ int test_tok_syntax_empty_closed(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_symbol_empty_closed(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -891,10 +961,12 @@ int test_tok_symbol_empty_closed(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_string_empty_closed(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -909,10 +981,12 @@ int test_tok_string_empty_closed(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_char_empty_closed(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -927,10 +1001,12 @@ int test_tok_char_empty_closed(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_integer_empty_closed(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -945,10 +1021,12 @@ int test_tok_integer_empty_closed(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_double_empty_closed(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -963,10 +1041,12 @@ int test_tok_double_empty_closed(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
 int test_tok_clean_whitespace_empty_closed(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -980,6 +1060,7 @@ int test_tok_clean_whitespace_empty_closed(void) {
     return 0;
   }
   
+  kill_eval_after_tests();
   return 1;
 }
 
@@ -987,6 +1068,7 @@ int test_tok_clean_whitespace_empty_closed(void) {
 // Integration test
 
 int test_tokenize_simple_expression(void) {
+  if (!start_lispbm_for_tests()) return 0;
   
   lbm_buffered_channel_state_t bs;
   lbm_char_channel_t chan;
@@ -1042,6 +1124,7 @@ int test_tokenize_simple_expression(void) {
   }
   lbm_channel_drop(&chan, (unsigned int) n);
   
+  kill_eval_after_tests();
   return 1;
 }
 
@@ -1050,12 +1133,6 @@ int test_tokenize_simple_expression(void) {
 int main(void) {
   int tests_passed = 0;
   int total_tests = 0;
-
-  // Initialize LispBM once for all tests
-  if (!start_lispbm_for_tests()) {
-    printf("FAILED: Could not initialize LispBM\n");
-    return 1;
-  }
 
   // tok_syntax tests
   total_tests++; if (test_tok_syntax_no_data()) tests_passed++;
@@ -1121,9 +1198,6 @@ int main(void) {
 
   // Integration tests
   total_tests++; if (test_tokenize_simple_expression()) tests_passed++;
-
-  // Clean up LispBM after all tests
-  kill_eval_after_tests();
 
   if (tests_passed == total_tests) {
     printf("SUCCESS\n");

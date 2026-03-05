@@ -280,15 +280,6 @@
                       ))
               end)))
 
-(define endian
-  (ref-entry "lbm-endian"
-             (list
-              (para (list "`lbm-endian` returns the endianness of the system lbm is running on."
-                          ))
-              (code '((lbm-endian)
-                      ))
-              end)))
-
 (define arch
   (ref-entry "is-64bit"
              (list

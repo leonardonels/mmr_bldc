@@ -27,8 +27,7 @@ for bench, color in zip(benches,colors):
 
         if (bench in df.index):
             row = df.loc[bench]
-            # Use iloc[1] for second column (Eval time) - works with all file formats
-            dict.update({date : row.iloc[1]});
+            dict.update({date : row[1]});
         # else:
         #     print("missing data point ", bench, file )
                         
@@ -46,7 +45,7 @@ n = 4  # Keeps every 7th label
 ax.tick_params(axis='both', which='major', labelsize=6)
 ax.tick_params(axis='both', which='minor', labelsize=4)
 ax.set_facecolor("lightgray");
-plt.ylabel("Eval Time (Sec)")
+plt.ylabel("Sec")
 plt.grid()
 plt.savefig('benchresults.png', dpi=600, bbox_extra_artists=(lgd,), bbox_inches='tight')     
 plt.yscale('log')

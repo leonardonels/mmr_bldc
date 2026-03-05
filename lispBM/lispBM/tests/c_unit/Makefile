@@ -6,8 +6,7 @@ include $(LISPBM)/lispbm.mk
 
 PLATFORM_INCLUDE = -I$(LISPBM)/platform/linux/include
 PLATFORM_SRC     = $(LISPBM)/platform/linux/src/platform_mutex.c \
-                   $(LISPBM)/platform/linux/src/platform_timestamp.c \
-                   $(LISPBM)/platform/linux/src/platform_thread.c
+                   $(LISPBM)/platform/linux/src/platform_timestamp.c
 
 #CCFLAGS = -g -O2 -Wall -Wextra -Wshadow -Wconversion -Wclobbered -pedantic -std=c99
 
@@ -35,7 +34,7 @@ TARGETS = $(SOURCES:.c=.exe)
 all: $(TARGETS)
 
 %.exe: %.c
-	$(CC) $(CCFLAGS_COV_32) $(LISPBM_SRC) $(PLATFORM_SRC) $(LISPBM_FLAGS) $< -o $@ -I$(LISPBM)include -I$(LISPBM)src $(PLATFORM_INCLUDE) -lpthread -lm
+	$(CC) $(CCFLAGS_COV_32) $(LISPBM_SRC) $(PLATFORM_SRC) $(LISPBM_FLAGS) $< -o $@ -I$(LISPBM)include $(PLATFORM_INCLUDE) -lpthread -lm
 
 clean:
 	rm -f $(TARGETS)

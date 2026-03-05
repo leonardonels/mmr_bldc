@@ -354,8 +354,6 @@ lbm_uint *lbm_get_symbol_list_entry_by_name(char *name) {
 // Lookup symbol id given symbol name
 int lbm_get_symbol_by_name(char *name, lbm_uint* id) {
   int res = 0;
-  lbm_uint *curr;
-
   // loop through special symbols
   for (unsigned int i = 0; i < NUM_SPECIAL_SYMBOLS; i ++) {
     if (str_eq(name, (char *)special_symbols[i].name)) {
@@ -372,7 +370,7 @@ int lbm_get_symbol_by_name(char *name, lbm_uint* id) {
     }
   }
 
-  curr = symlist;
+  lbm_uint *curr = symlist;
   while (curr) {
     char *str = (char*)curr[NAME];
     if (str_eq(name, str)) {

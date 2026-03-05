@@ -23,10 +23,7 @@
 // Software SPI
 
 void spi_bb_init(spi_bb_state *s) {
-	if (!s->mutex_init_done) {
-		chMtxObjectInit(&s->mutex);
-		s->mutex_init_done = true;
-	}
+	chMtxObjectInit(&s->mutex);
 
 	palSetPadMode(s->miso_gpio, s->miso_pin, PAL_MODE_INPUT_PULLUP);
 	palSetPadMode(s->sck_gpio, s->sck_pin, PAL_MODE_OUTPUT_PUSHPULL | PAL_STM32_OSPEED_HIGHEST);

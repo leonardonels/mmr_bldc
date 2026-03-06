@@ -3294,9 +3294,16 @@ void mcpwm_foc_adc_int_handler(void *p, uint32_t flags) {
 		const float speed_fast_now = motor_now->m_pll_speed;
 
 		float id_set_tmp = motor_now->m_id_set;
+
+		// ==================================
+		// > WARNING: first iq_set_tmp call
+		// ==================================
 		float iq_set_tmp = motor_now->m_iq_set;
 		state_now->max_duty = conf_now->l_max_duty;
 
+		// =============================================
+		// > WARNING: first iq_set_tmp truncation call.
+		// =============================================
 		if (motor_now->m_control_mode == CONTROL_MODE_CURRENT_BRAKE) {
 			utils_truncate_number_abs(&iq_set_tmp, -conf_now->lo_current_min);
 		}
@@ -3323,6 +3330,10 @@ void mcpwm_foc_adc_int_handler(void *p, uint32_t flags) {
 			if ((SIGN(speed_fast_now) != SIGN(motor_now->m_br_speed_before) ||
 					SIGN(vq_now) != SIGN(motor_now->m_br_vq_before) ||
 					fabsf(motor_now->m_duty_filtered) < 0.001 || motor_now->m_br_no_duty_samples < 10) &&
+					
+					// =========================================================================
+					// > WARNING: sign lost by design, make sure is this what you really need
+					// =========================================================================
 					state_now->i_abs_filter < fabsf(iq_set_tmp)) {
 				control_duty = true;
 				duty_set = 0.0;
@@ -3406,6 +3417,10 @@ void mcpwm_foc_adc_int_handler(void *p, uint32_t flags) {
 				// Calculate output
 				float output = p_term + motor_now->m_duty_i_term;
 				utils_truncate_number(&output, -1.0, 1.0);
+
+				// =============================================================================
+				// > WARNING: iq_set_tmp overwritten if duty_set is not within the valid range?
+				// =============================================================================
 				iq_set_tmp = output * current_max_for_duty;
 			} else {
 				// If the duty cycle is less than or equal to the set duty cycle just limit
@@ -3420,6 +3435,10 @@ void mcpwm_foc_adc_int_handler(void *p, uint32_t flags) {
 				motor_now->duty_was_pi = false;
 			}
 		} else if (motor_now->m_control_mode == CONTROL_MODE_CURRENT_BRAKE) {
+
+			// ================================================================
+			// > WARNING: iq_set_tmp sign overwritten by speed_fast_now sign
+			// ================================================================
 			// Braking
 			iq_set_tmp = -SIGN(speed_fast_now) * fabsf(iq_set_tmp);
 		}
@@ -3474,6 +3493,10 @@ void mcpwm_foc_adc_int_handler(void *p, uint32_t flags) {
 					motor_now->m_observer_state.x2 = motor_now->m_observer_x2_override;
 					iq_set_tmp += conf_now->foc_sl_openloop_boost_q * SIGN(iq_set_tmp);
 					if (conf_now->foc_sl_openloop_max_q > conf_now->cc_min_current) {
+
+						// ==========================
+						// > WARNING: truncation!
+						// ==========================
 						utils_truncate_number_abs(&iq_set_tmp, conf_now->foc_sl_openloop_max_q);
 					}
 				} else {
@@ -3558,6 +3581,9 @@ void mcpwm_foc_adc_int_handler(void *p, uint32_t flags) {
 
 		FOC_PROFILE_LINE_FINE();
 
+		// ==========================================================================================
+		// > WARNING: an if statement is used, iq_set_tmp wont be set if the condition is not met.
+		// ==========================================================================================
 		// Apply MTPA. See: https://github.com/vedderb/bldc/pull/179
 		const float ld_lq_diff = conf_now->foc_motor_ld_lq_diff;
 		if (conf_now->foc_mtpa_mode != MTPA_MODE_OFF && ld_lq_diff != 0.0 &&
@@ -3570,6 +3596,10 @@ void mcpwm_foc_adc_int_handler(void *p, uint32_t flags) {
 			}
 
 			id_set_tmp = (lambda - sqrtf(SQ(lambda) + 8.0 * SQ(ld_lq_diff * iq_ref))) / (4.0 * ld_lq_diff);
+
+			// =======================================
+			// > WARNING: SIGN() has been used here
+			// =======================================
 			iq_set_tmp = SIGN(iq_set_tmp) * sqrtf(SQ(iq_set_tmp) - SQ(id_set_tmp));
 		}
 
@@ -3585,8 +3615,15 @@ void mcpwm_foc_adc_int_handler(void *p, uint32_t flags) {
 		}
 
 		id_set_tmp -= motor_now->m_i_fw_set;
+
+		// ==========================================================
+		// > WARNING: SIGN() changed here, make sure it's correct.
+		// ==========================================================
 		iq_set_tmp -= SIGN(mod_q) * motor_now->m_i_fw_set * conf_now->foc_fw_q_current_factor;
 
+		// ==========================================================
+		// > WARNING: multiple truncations -> possible errors here
+		// ==========================================================
 		// Apply current limits
 		// TODO: Consider D axis current for the input current as well. Currently this is done using
 		// l_in_current_map_start in update_override_limits.
@@ -3610,6 +3647,10 @@ void mcpwm_foc_adc_int_handler(void *p, uint32_t flags) {
 		if (!state_now->id_override_hfi) {
 			state_now->id_target = id_set_tmp;
 		}
+
+		// ==========================================================
+		// > WARNING: last iq_set_tmp call, make sure it's correct.
+		// ==========================================================
 		state_now->iq_target = iq_set_tmp;
 
 		FOC_PROFILE_LINE_FINE();
